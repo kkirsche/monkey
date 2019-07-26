@@ -1,49 +1,52 @@
 package token
 
 const (
-	// ILLEGAL is an illegal token or character which we don't know about
-	ILLEGAL = "ILLEGAL"
-	// EOF is the end of the file
-	EOF = "EOF"
+	// Lexer / Parser Control
+	ILLEGAL = "ILLEGAL" // ILLEGAL is an illegal token or character which we don't know about
+	EOF     = "EOF"     // EOF is the end of the file
 
 	// Identifiers + literals
-
-	// IDENT is an identifer such as add, foobar, x, y, ...
-	IDENT = "IDENT"
-	// INT is an integer, such as 1343456
-	INT = "INT"
+	IDENT = "IDENT" // IDENT is an identifer such as add, foobar, x, y, ...
+	INT   = "INT"   // INT is an integer, such as 1343456
 
 	// Operators
-
-	// ASSIGN =
-	ASSIGN = "="
-	// PLUS +
-	PLUS = "+"
+	ASSIGN   = "="  // ASSIGN: Assignment operation / Equal sign
+	PLUS     = "+"  // PLUS: Plus sign
+	MINUS    = "-"  // MINUS: Minus sign / Hyphen
+	BANG     = "!"  // BANG: Bang / Exclamation Point
+	ASTERISK = "*"  // ASTERISK: Asterisk
+	SLASH    = "/"  // SLASH: Forward slash
+	LT       = "<"  // LT: Less Than
+	GT       = ">"  // GT: Greater Than
+	EQ       = "==" // EQ: Equal operator
+	NOT_EQ   = "!=" // NOT_EQ: Inequality operator
 
 	// Delimiters
-
-	// COMMA ,
-	COMMA = ","
-	// SEMICOLON ;
+	COMMA     = ","
 	SEMICOLON = ";"
-	// LPAREN (
-	LPAREN = "("
-	// RPAREN )
-	RPAREN = ")"
-	// LBRACE {
-	LBRACE = "{"
-	// RBRACE }
-	RBRACE = "}"
+	LPAREN    = "("
+	RPAREN    = ")"
+	LBRACE    = "{"
+	RBRACE    = "}"
 
-	// FUNCTION FUNCTION
+	// Keywords
 	FUNCTION = "FUNCTION"
-	// LET LET
-	LET = "LET"
+	LET      = "LET"
+	TRUE     = "TRUE"
+	FALSE    = "FALSE"
+	IF       = "IF"
+	ELSE     = "ELSE"
+	RETURN   = "RETURN"
 )
 
 var keywords = map[string]Type{
-	"fn":  FUNCTION,
-	"let": LET,
+	"fn":     FUNCTION,
+	"let":    LET,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
+	"return": RETURN,
 }
 
 // Type is a string which allows us to distinguish between types of tokens

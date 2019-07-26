@@ -60,6 +60,17 @@ func (l *Lexer) readChar() {
 	l.column++
 }
 
+// peekChar is similar to readChar, but instead we peek ahead at the next
+// character in the input stream rather than actually advancing forward.
+// This allows for us to look for two character tokens more easily.
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= l.inputLen {
+		return 0
+	}
+
+	return l.input[l.readPosition]
+}
+
 func (l *Lexer) readIdentifier() string {
 	start := l.position
 	for isLetter(l.ch) {
@@ -92,13 +103,45 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch l.ch {
 	case '=':
-		tok = newToken(token.ASSIGN, l.ch, l.column, l.line)
-	case ';':
-		tok = newToken(token.SEMICOLON, l.ch, l.column, l.line)
-	case ',':
-		tok = newToken(token.COMMA, l.ch, l.column, l.line)
+		if l.peekChar() == '=' {
+			// get the first equal
+			ch := l.ch
+			// get the second equal and advance our position
+			l.readChar()
+			// construct the == literal
+			literal := string(ch) + string(l.ch)
+			tok = token.Token{Type: token.EQ, Literal: literal, Column: l.column - 1, Line: l.line}
+		} else {
+			tok = newToken(token.ASSIGN, l.ch, l.column, l.line)
+		}
 	case '+':
 		tok = newToken(token.PLUS, l.ch, l.column, l.line)
+	case '-':
+		tok = newToken(token.MINUS, l.ch, l.column, l.line)
+	case '!':
+		if l.peekChar() == '=' {
+			// get the first bang
+			ch := l.ch
+			// get the second equal and advance our position
+			l.readChar()
+			// construct the != literal
+			literal := string(ch) + string(l.ch)
+			tok = token.Token{Type: token.NOT_EQ, Literal: literal, Column: l.column - 1, Line: l.line}
+		} else {
+			tok = newToken(token.BANG, l.ch, l.column, l.line)
+		}
+	case '*':
+		tok = newToken(token.ASTERISK, l.ch, l.column, l.line)
+	case '/':
+		tok = newToken(token.SLASH, l.ch, l.column, l.line)
+	case '<':
+		tok = newToken(token.LT, l.ch, l.column, l.line)
+	case '>':
+		tok = newToken(token.GT, l.ch, l.column, l.line)
+	case ',':
+		tok = newToken(token.COMMA, l.ch, l.column, l.line)
+	case ';':
+		tok = newToken(token.SEMICOLON, l.ch, l.column, l.line)
 	case '(':
 		tok = newToken(token.LPAREN, l.ch, l.column, l.line)
 	case ')':
@@ -108,6 +151,7 @@ func (l *Lexer) NextToken() token.Token {
 	case '}':
 		tok = newToken(token.RBRACE, l.ch, l.column, l.line)
 	case 0:
+		// EOF case
 		tok.Literal = ""
 		tok.Type = token.EOF
 		tok.Column = l.column - 1

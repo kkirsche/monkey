@@ -27,6 +27,17 @@ let add = fn(x, y) {
 };
 
 let result = add(five, ten);
+!-/*5;
+5 < 10 > 5;
+
+if (5 < 10) {
+  return true;
+} else {
+  return false;
+}
+
+10 == 10;
+10 != 9;
 `
 
 	tests := []expected{
@@ -66,7 +77,44 @@ let result = add(five, ten);
 		expected{token.IDENT, "ten", 24, 8},
 		expected{token.RPAREN, ")", 27, 8},
 		expected{token.SEMICOLON, ";", 28, 8},
-		expected{token.EOF, "", 0, 9},
+		expected{token.BANG, "!", 1, 9},
+		expected{token.MINUS, "-", 2, 9},
+		expected{token.SLASH, "/", 3, 9},
+		expected{token.ASTERISK, "*", 4, 9},
+		expected{token.INT, "5", 5, 9},
+		expected{token.SEMICOLON, ";", 6, 9},
+		expected{token.INT, "5", 1, 10},
+		expected{token.LT, "<", 3, 10},
+		expected{token.INT, "10", 5, 10},
+		expected{token.GT, ">", 8, 10},
+		expected{token.INT, "5", 10, 10},
+		expected{token.SEMICOLON, ";", 11, 10},
+		expected{token.IF, "if", 1, 12},
+		expected{token.LPAREN, "(", 4, 12},
+		expected{token.INT, "5", 5, 12},
+		expected{token.LT, "<", 7, 12},
+		expected{token.INT, "10", 9, 12},
+		expected{token.RPAREN, ")", 11, 12},
+		expected{token.LBRACE, "{", 13, 12},
+		expected{token.RETURN, "return", 3, 13},
+		expected{token.TRUE, "true", 10, 13},
+		expected{token.SEMICOLON, ";", 14, 13},
+		expected{token.RBRACE, "}", 1, 14},
+		expected{token.ELSE, "else", 3, 14},
+		expected{token.LBRACE, "{", 8, 14},
+		expected{token.RETURN, "return", 3, 15},
+		expected{token.FALSE, "false", 10, 15},
+		expected{token.SEMICOLON, ";", 15, 15},
+		expected{token.RBRACE, "}", 1, 16},
+		expected{token.INT, "10", 1, 18},
+		expected{token.EQ, "==", 4, 18},
+		expected{token.INT, "10", 7, 18},
+		expected{token.SEMICOLON, ";", 9, 18},
+		expected{token.INT, "10", 1, 19},
+		expected{token.NOT_EQ, "!=", 4, 19},
+		expected{token.INT, "9", 7, 19},
+		expected{token.SEMICOLON, ";", 8, 19},
+		expected{token.EOF, "", 0, 20},
 	}
 
 	lex := New(input)
