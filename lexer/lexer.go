@@ -1,6 +1,8 @@
 package lexer
 
 import (
+	"unicode/utf8"
+
 	"github.com/kkirsche/monkey/token"
 )
 
@@ -11,7 +13,7 @@ type Lexer struct {
 	inputLen     int
 	position     int  // current position in input (points to current char)
 	readPosition int  // current reading position in input (after current char)
-	ch           byte // churrent char under examination
+	ch           rune // churrent char under examination
 	column       int  // the current number of the column of the line
 	line         int  // the current number of line
 }
@@ -29,15 +31,15 @@ func New(input string) *Lexer {
 	return l
 }
 
-func newToken(tType token.Type, ch byte, column, line int) token.Token {
+func newToken(tType token.Type, ch rune, column, line int) token.Token {
 	return token.Token{Type: tType, Literal: string(ch), Column: column, Line: line}
 }
 
-func isLetter(ch byte) bool {
+func isLetter(ch rune) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
-func isDigit(ch byte) bool {
+func isDigit(ch rune) bool {
 	return '0' <= ch && ch <= '9'
 }
 
@@ -50,25 +52,28 @@ func (l *Lexer) readChar() {
 		l.column = 0
 	}
 
+	width := 1
 	if l.readPosition >= l.inputLen {
 		l.ch = 0
 	} else {
-		l.ch = l.input[l.readPosition]
+		l.ch, width = utf8.DecodeRuneInString(l.input[l.readPosition:])
 	}
 	l.position = l.readPosition
-	l.readPosition++
+	l.readPosition += width
 	l.column++
 }
 
 // peekChar is similar to readChar, but instead we peek ahead at the next
 // character in the input stream rather than actually advancing forward.
 // This allows for us to look for two character tokens more easily.
-func (l *Lexer) peekChar() byte {
+func (l *Lexer) peekChar() rune {
 	if l.readPosition >= l.inputLen {
 		return 0
 	}
 
-	return l.input[l.readPosition]
+	c, _ := utf8.DecodeRuneInString(l.input[l.readPosition:])
+
+	return c
 }
 
 func (l *Lexer) readIdentifier() string {
