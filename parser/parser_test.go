@@ -9,6 +9,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+type expected struct {
+	identifier string
+}
+
 func TestLetStatements(t *testing.T) {
 	input := `
 let x = 5;
@@ -24,9 +28,7 @@ let foobar = 838383;
 	require.NotNil(t, program, "ParseProgram() returned nil")
 	require.Lenf(t, program.Statements, 3, "program.Statements does not contain 3 statements. got=%d", len(program.Statements))
 
-	tests := []struct {
-		expectedIdentifier string
-	}{
+	tests := []expected{
 		{"x"},
 		{"y"},
 		{"foobar"},
@@ -34,7 +36,7 @@ let foobar = 838383;
 
 	for i, tt := range tests {
 		stmt := program.Statements[i]
-		if !testLetStatement(t, stmt, tt.expectedIdentifier) {
+		if !testLetStatement(t, stmt, tt.identifier) {
 			return
 		}
 	}
