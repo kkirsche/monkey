@@ -57,6 +57,20 @@ func (ls *LetStatement) statementNode() {}
 // TokenLiteral implements the Node interface
 func (ls *LetStatement) TokenLiteral() string { return ls.Token.Literal }
 
+// ReturnStatement is how a function can return a value to it's caller. This
+// follows structure `return <expression>`. Thus consist solely of a keyword,
+// 'return', and the expression
+type ReturnStatement struct {
+	Token       token.Token // the 'return' token
+	ReturnValue *Expression
+}
+
+// statementNode implements the Statement interface
+func (rs *ReturnStatement) statementNode() {}
+
+// TokenLiteral implements the Node interface
+func (rs *ReturnStatement) TokenLiteral() string { return rs.Token.Literal }
+
 // Identifier is the individual identifier which represents the expression
 // While not all statements have a value for their identifier, some do, and as
 // such this structure allows us to reuse the identifier for different
