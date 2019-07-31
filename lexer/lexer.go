@@ -1,6 +1,7 @@
 package lexer
 
 import (
+	"unicode"
 	"unicode/utf8"
 
 	"github.com/kkirsche/monkey/token"
@@ -162,13 +163,13 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Column = l.column - 1
 		tok.Line = l.line
 	default:
-		if isLetter(l.ch) {
+		if unicode.IsLetter(l.ch) {
 			tok.Literal = l.readIdentifier()
 			tok.Type = token.LookupIdent(tok.Literal)
 			tok.Column = l.column - len(tok.Literal)
 			tok.Line = l.line
 			return tok
-		} else if isDigit(l.ch) {
+		} else if unicode.IsNumber(l.ch) {
 			tok.Literal = l.readNumber()
 			tok.Type = token.INT
 			tok.Column = l.column - len(tok.Literal)
